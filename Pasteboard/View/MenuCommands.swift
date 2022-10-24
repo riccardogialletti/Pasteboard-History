@@ -16,12 +16,12 @@ struct MenuCommands: Commands {
             // replace with nothing so we don't have to deal with multiple windows
         }
         CommandGroup(after: CommandGroupPlacement.newItem) {
-            Button("Open...") {
+            /*Button("Open...") {
                 commandsHandler.openCommand()
             }
             Button("Show Favorites") {
                 commandsHandler.showFavoritesCommand()
-            }
+            }*/
         }
     }
 }

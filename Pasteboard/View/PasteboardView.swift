@@ -34,14 +34,10 @@ struct PasteboardView: View {
         ScrollView {
             VStack(alignment: .leading) {
                 ZStack {
-                    Rectangle()
-                        .foregroundColor(Color.clear)
                     HStack {
                         Image(systemName: "magnifyingglass")
                         TextField("Search ..", text: $searchText)
-                            .cornerRadius(8)
                     }
-                    .foregroundColor(.gray)
                 }
                 .frame(height: 25)
                 .padding()
@@ -159,3 +155,13 @@ struct FileView_Previews: PreviewProvider {
     }
 }
 
+struct MyTextFieldStyle: TextFieldStyle {
+    func _body(configuration: TextField<Self._Label>) -> some View {
+        configuration
+        .padding(30)
+        .background(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(Color.red, lineWidth: 3)
+        ).padding()
+    }
+}

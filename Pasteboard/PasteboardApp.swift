@@ -50,6 +50,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     }
 
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        return true
+    }
+
     @objc func showPopover(_ sender: AnyObject?) {
         if let button = self.statusItem?.button
         {
@@ -68,7 +72,7 @@ struct PasteboardApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     //var coordinator:AppCoordinator
-    //var menuCommandsHandler:MenuCommandsHandler
+    var menuCommandsHandler:MenuCommandsHandler
     
 
     var body: some Scene {
@@ -82,43 +86,44 @@ struct PasteboardApp: App {
           MenuCommands(commandsHandler: menuCommandsHandler)
           }*/
          .windowStyle(.hiddenTitleBar)*/
-
-        Settings {
+        WindowGroup {
             AnyView(VStack{})
+        }.commands {
+            MenuCommands(commandsHandler: menuCommandsHandler)
+        }
+        Settings {
+            SettingsPane()
         }
     }
 
-    /*init() {
-     coordinator = AppCoordinator()
-     menuCommandsHandler = MenuCommandsHandler(coordinator: coordinator)
-     }*/
+    init() {
+        //coordinator = AppCoordinator()
+        menuCommandsHandler = MenuCommandsHandler()
+    }
 
 
 
 
 }
 
-/*struct AppScene:Scene {
- var coordinator:AppCoordinator
- var menuCommandsHandler:MenuCommandsHandler
-
- var body: some Scene {
- /*WindowGroup {
-  ContentView(coordinator: coordinator)
-  .background(VisualEffectView().ignoresSafeArea())
-  }
-  /*.commands {
-   MenuCommands(commandsHandler: menuCommandsHandler)
-   }*/
-  .windowStyle(.hiddenTitleBar)*/
-
- }
- }*/
+struct SettingsPane: View {
+    @AppStorage("preference_keyAsPerSettingBundleIdentifier") var kSetting = true
+    var body: some View {
+        Form {
+            Toggle("Perform some boolean Setting", isOn: $kSetting)
+                .help(kSetting ? "Undo that boolean Setting" : "Perform that boolean Setting")
+        }
+        .padding()
+        .frame(minWidth: 400)
+    }
+}
 
 struct VisualEffectView: NSViewRepresentable {
     func makeNSView(context: Context) -> NSVisualEffectView {
         let effectView = NSVisualEffectView()
-        effectView.state = .active
+        effectView.blendingMode = .withinWindow
+        effectView.material = .popover
+        effectView.state = .followsWindowActiveState
         return effectView
     }
 
